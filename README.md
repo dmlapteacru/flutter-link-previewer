@@ -1,14 +1,13 @@
 # link_previewer
 
-A new Flutter package.
+A new Flutter package. Build container with image, title, description from web-site (link) will be provided.
 
 ## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+![alt text](https://github.com/dmlapteacru/flutter-link-previewer/blob/master/images/link_preview.PNG)
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+
+To use it:
+  1. Get the package.
+  2. add the `link_previewer` with path to `pubspec.yaml`
+  3. add to your core ex: `LinkPreviewer(link: "https://...", direction: ContentDirection.horizontal,)`
