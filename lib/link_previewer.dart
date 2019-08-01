@@ -10,11 +10,11 @@ import 'dart:convert';
 
 part 'parser/web_page_parser.dart';
 
-part 'horizontal_link_view.dart';
+part 'package:link_previewer/horizontal_link_view.dart';
 
-part 'vertical_link_preview.dart';
+part 'package:link_previewer/vertical_link_preview.dart';
 
-part 'content_direction.dart';
+part 'package:link_previewer/content_direction.dart';
 
 class LinkPreviewer extends StatefulWidget {
   LinkPreviewer({
@@ -65,7 +65,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
 
   void _fetchData() {
     if (!isValidUrl(widget.link)) {
-      throw Exception("Unvalid link");
+      throw Exception("Invalid link");
     } else {
       _getMetaData(widget.link);
     }
