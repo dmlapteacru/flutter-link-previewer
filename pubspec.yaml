@@ -1,6 +1,6 @@
 name: link_previewer
-description: A new Flutter package.
-version: 1.0.1
+description: A new Flutter package. Build container with image, title, description from web-site (link) will be passed as argument. It is build for making link looks prettier than just inline link or default hyperlink.
+version: 1.0.2
 author: Dumitru Lapteacru <dlapteacru.intern@gmail.com>
 homepage: https://github.com/dmlapteacru/flutter-link-previewer
 
