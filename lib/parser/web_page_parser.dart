@@ -1,14 +1,14 @@
 part of link_previewer;
 
 class WebPageParser {
-
   static Future<Map> getData(String url) async {
     var response = await http.get(url);
 
     return getDataFromResponse(response, url);
   }
 
-  static Map<dynamic, dynamic> getDataFromResponse(http.Response response, String url) {
+  static Map<dynamic, dynamic> getDataFromResponse(
+      http.Response response, String url) {
     var requiredAttributes = ['title', 'image'];
     var data = {};
 
@@ -25,7 +25,9 @@ class WebPageParser {
           if (ogTagValue == null || ogTagValue.length == 0) {
             ogTagValue = _scrapeDataToEmptyValue(ogTagTitle, document);
           }
-          if (ogTagTitle == "image" && (!ogTagValue.startsWith("http") || !ogTagValue.startsWith("https"))) {
+          if (ogTagTitle == "image" &&
+              (!ogTagValue.startsWith("http") ||
+                  !ogTagValue.startsWith("https"))) {
             data[ogTagTitle] = "http://" + _extractHost(url) + ogTagValue;
           } else {
             data[ogTagTitle] = ogTagValue;
@@ -42,8 +44,7 @@ class WebPageParser {
     return uri.host;
   }
 
-  static String _scrapeDataToEmptyValue(
-      String tagTitle, Document document) {
+  static String _scrapeDataToEmptyValue(String tagTitle, Document document) {
     if (tagTitle == "title") {
       return document.head.getElementsByTagName("title")[0].text;
     }
