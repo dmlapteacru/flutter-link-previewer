@@ -20,8 +20,8 @@ class LinkPreviewer extends StatefulWidget {
   LinkPreviewer({
     Key key,
     @required this.link,
-    this.width,
-    this.height,
+    this.titleFontSize,
+    this.bodyFontSize,
     this.backgroundColor = Colors.white,
     this.borderColor = Colors.deepOrangeAccent,
     this.borderRadius,
@@ -30,8 +30,8 @@ class LinkPreviewer extends StatefulWidget {
         super(key: key);
 
   final String link;
-  final double width;
-  final double height;
+  final double titleFontSize;
+  final double bodyFontSize;
   final Color backgroundColor;
   final Color borderColor;
   final double borderRadius;
@@ -43,7 +43,6 @@ class LinkPreviewer extends StatefulWidget {
 
 class _LinkPreviewer extends State<LinkPreviewer> {
   Map _metaData;
-  double _width;
   double _height;
 
   @override
@@ -53,14 +52,11 @@ class _LinkPreviewer extends State<LinkPreviewer> {
   }
 
   double _calculateHeight(double screenHeight) {
-    if (widget.height == null) {
-      if (widget.direction == ContentDirection.horizontal) {
-        return screenHeight * 0.12;
-      } else {
-        return screenHeight * 0.25;
-      }
+    if (widget.direction == ContentDirection.horizontal) {
+      return screenHeight * 0.12;
+    } else {
+      return screenHeight * 0.25;
     }
-    return widget.height;
   }
 
   void _fetchData() {
@@ -107,10 +103,6 @@ class _LinkPreviewer extends State<LinkPreviewer> {
 
   @override
   Widget build(BuildContext context) {
-    _width = widget.width == null
-        ? MediaQuery.of(context).size.width * 0.85
-        : widget.width;
-
     _height = _calculateHeight(MediaQuery.of(context).size.height);
 
     return _metaData == null
@@ -125,9 +117,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
                 width: widget.borderColor == null ? 0.0 : 1.0,
               ),
               borderRadius: BorderRadius.all(Radius.circular(
-                  widget.borderRadius == null ? 5.0 : widget.borderRadius)),
+                  widget.borderRadius == null ? 3.0 : widget.borderRadius)),
             ),
-            width: _width,
             height: _height,
             child: _buildLinkView(
               widget.link,
@@ -135,14 +126,11 @@ class _LinkPreviewer extends State<LinkPreviewer> {
               _metaData['description'] == null ? "" : _metaData['description'],
               _metaData['image'] == null ? "" : _metaData['image'],
               _launchURL,
-              _width,
-              _height,
             ),
           );
   }
 
-  Widget _buildLinkView(
-      link, title, description, imageUri, onTap, width, height) {
+  Widget _buildLinkView(link, title, description, imageUri, onTap) {
     if (widget.direction == ContentDirection.horizontal) {
       return HorizontalLinkView(
         url: link,
@@ -150,8 +138,6 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         description: description,
         imageUri: imageUri,
         onTap: onTap,
-        imageHeight: height,
-        imageWidth: width,
       );
     } else {
       return VerticalLinkPreview(
@@ -160,8 +146,6 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         description: description,
         imageUri: imageUri,
         onTap: onTap,
-        imageWidth: width,
-        imageHeight: height,
       );
     }
   }
