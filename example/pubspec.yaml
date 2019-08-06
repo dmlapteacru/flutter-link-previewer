@@ -1,6 +1,6 @@
-name: link_previewer
+name: link_previewer_example
 description: A new Flutter package. It is build for making link looks prettier than just inline link or default hyperlink.
-version: 1.0.5
+version: 1.0.4
 author: Dumitru Lapteacru <dlapteacru.intern@gmail.com>
 homepage: https://github.com/dmlapteacru/flutter-link-previewer
 
@@ -10,10 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  async: ^2.0.8
-  html: ^0.14.0+2
-  http: ^0.12.0+2
-  url_launcher: ^5.1.1
+  link_previewer:
+    path: ../
 
 dev_dependencies:
   flutter_test:

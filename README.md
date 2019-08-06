@@ -6,8 +6,53 @@ A new Flutter package. Build container with image, title, description from web-s
 
 ![alt text](https://github.com/dmlapteacru/flutter-link-previewer/blob/master/images/link_preview.PNG)
 
+## Installing 
+Use this package as a library
+1. Depend on it
 
-To use it:
-  1. Get the package.
-  2. add the `link_previewer` with path to `pubspec.yaml`
-  3. add to your core ex: `LinkPreviewer(link: "https://...", direction: ContentDirection.horizontal,)`
+Add this to your package's pubspec.yaml file:
+
+
+```yaml
+dependencies:
+  link_previewer: ^1.0.4
+```
+
+2. Install it
+
+You can install packages from the command line:
+with Flutter:
+
+```
+$ flutter pub get
+```
+
+Alternatively, your editor might support flutter pub get. Check the docs for your editor to learn more.
+
+3. Import it
+
+Now in your Dart code, you can use:
+
+```dart
+import 'package:link_previewer/link_previewer.dart';
+```
+
+## Usage
+
+```dart
+Widget build() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      LinkPreviewer(
+        link: "https://www.linkedin.com/feed/",
+        direction: ContentDirection.horizontal,
+      ),
+      LinkPreviewer(
+        link: "https://www.linkedin.com/feed/",
+        direction: ContentDirection.vertical,
+      ),
+    ],
+  );
+}
+```
