@@ -56,3 +56,22 @@ Widget build() {
   );
 }
 ```
+
+## Properties (Constructor props)
+| PropName      | Value         | Definition  |
+| ------------- |:-------------:| -----:|
+| `link`          | `String` value (Ex: `"http://..."`) | Link to website will be shown as LinkPreviewer |
+| `titleFontSize`      | `double` (default: `15`, but it's auto resizable depends on layout(parent) width or hight)    |  Title font size  |
+| `bodyFontSize` | `double` (default: `14`, but it's auto resizable depends on layout(parent) width or hight)   |    Body font size |
+| `backgroundColor` | `Color` (default: `Colors.white`) | Background color in case there will be not much text and will be whitespace |
+| `borderColor` | `Color` (default: `Colors.deepOrangeAccent`) | Border color of the previewer |
+| `borderRadius` | `double` (default: `3.0`) | Border radius |
+| `direction` | `ContentDirection` from the package (default: `ContentDirection.horizontal`)                                            Options: 1. `ContentDirection.horizontal` 2. `ContentDirection.vertical` | Content direction (image -> title -> body) |
+
+#### From version 1.1.0
+| PropName  | Value | Definition |
+| --------- |:-----:| ----------:|
+| `placeholder` | `Widget` | Custom placeholder while data is loading |
+| `defaultPlaceholderColor` | `Color` (default: `light-grey`) | If placeholder is not set, will be used the default one and its color can be set using this prop (empty container with background) |
+| `showTitle` | `bool` (default: `true`) | Title can be hiden using this prop, if it set to false |
+| `showBody` | `bool` (default: `true`) | Body can be hiden using this prop, if it set to false |

@@ -24,7 +24,11 @@ class LinkPreviewer extends StatefulWidget {
     this.bodyFontSize,
     this.backgroundColor = Colors.white,
     this.borderColor = Colors.deepOrangeAccent,
+    this.defaultPlaceholderColor,
     this.borderRadius,
+    this.placeholder,
+    this.showTitle = true,
+    this.showBody = true,
     this.direction = ContentDirection.horizontal,
   })  : assert(link != null),
         super(key: key);
@@ -34,8 +38,12 @@ class LinkPreviewer extends StatefulWidget {
   final double bodyFontSize;
   final Color backgroundColor;
   final Color borderColor;
+  final Color defaultPlaceholderColor;
   final double borderRadius;
   final ContentDirection direction;
+  final Widget placeholder;
+  final bool showTitle;
+  final bool showBody;
 
   @override
   _LinkPreviewer createState() => _LinkPreviewer();
@@ -44,14 +52,20 @@ class LinkPreviewer extends StatefulWidget {
 class _LinkPreviewer extends State<LinkPreviewer> {
   Map _metaData;
   double _height;
+  String _link;
+  Color _placeholderColor;
 
   @override
   void initState() {
     super.initState();
+    _link = widget.link.trim();
+    _placeholderColor = widget.defaultPlaceholderColor == null
+        ? Color.fromRGBO(235, 235, 235, 1.0)
+        : widget.defaultPlaceholderColor;
     _fetchData();
   }
 
-  double _calculateHeight(double screenHeight) {
+  double _computeHeight(double screenHeight) {
     if (widget.direction == ContentDirection.horizontal) {
       return screenHeight * 0.12;
     } else {
@@ -60,10 +74,10 @@ class _LinkPreviewer extends State<LinkPreviewer> {
   }
 
   void _fetchData() {
-    if (!isValidUrl(widget.link)) {
+    if (!isValidUrl(_link)) {
       throw Exception("Invalid link");
     } else {
-      _getMetaData(widget.link);
+      _getMetaData(_link);
     }
   }
 
@@ -103,34 +117,58 @@ class _LinkPreviewer extends State<LinkPreviewer> {
 
   @override
   Widget build(BuildContext context) {
-    _height = _calculateHeight(MediaQuery.of(context).size.height);
+    _height = _computeHeight(MediaQuery.of(context).size.height);
 
     return _metaData == null
-        ? Container()
-        : Container(
-            decoration: new BoxDecoration(
-              color: widget.backgroundColor,
-              border: Border.all(
-                color: widget.borderColor == null
-                    ? widget.backgroundColor
-                    : widget.borderColor,
-                width: widget.borderColor == null ? 0.0 : 1.0,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(
-                  widget.borderRadius == null ? 3.0 : widget.borderRadius)),
-            ),
-            height: _height,
-            child: _buildLinkView(
-              widget.link,
-              _metaData['title'] == null ? "" : _metaData['title'],
-              _metaData['description'] == null ? "" : _metaData['description'],
-              _metaData['image'] == null ? "" : _metaData['image'],
-              _launchURL,
-            ),
-          );
+        ? widget.placeholder == null
+            ? _buildPlaceHolder(_placeholderColor, _height)
+            : widget.placeholder
+        : _buildLinkContainer();
   }
 
-  Widget _buildLinkView(link, title, description, imageUri, onTap) {
+  Widget _buildPlaceHolder(Color color, double defaultHeight) {
+    return Container(
+      height: defaultHeight,
+      child: LayoutBuilder(builder: (context, constraints) {
+        var layoutWidth = constraints.biggest.width;
+        var layoutHeight = constraints.biggest.height;
+
+        return Container(
+          color: color,
+          width: layoutWidth,
+          height: layoutHeight,
+        );
+      }),
+    );
+  }
+
+  Widget _buildLinkContainer() {
+    return Container(
+      decoration: new BoxDecoration(
+        color: widget.backgroundColor,
+        border: Border.all(
+          color: widget.borderColor == null
+              ? widget.backgroundColor
+              : widget.borderColor,
+          width: widget.borderColor == null ? 0.0 : 1.0,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(
+            widget.borderRadius == null ? 3.0 : widget.borderRadius)),
+      ),
+      height: _height,
+      child: _buildLinkView(
+        _link,
+        _metaData['title'] == null ? "" : _metaData['title'],
+        _metaData['description'] == null ? "" : _metaData['description'],
+        _metaData['image'] == null ? "" : _metaData['image'],
+        _launchURL,
+        widget.showTitle,
+        widget.showBody
+      ),
+    );
+  }
+
+  Widget _buildLinkView(link, title, description, imageUri, onTap, showTitle, showBody) {
     if (widget.direction == ContentDirection.horizontal) {
       return HorizontalLinkView(
         url: link,
@@ -138,6 +176,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         description: description,
         imageUri: imageUri,
         onTap: onTap,
+        showTitle: showTitle,
+        showBody: showBody,
       );
     } else {
       return VerticalLinkPreview(
@@ -146,6 +186,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         description: description,
         imageUri: imageUri,
         onTap: onTap,
+        showTitle: showTitle,
+        showBody: showBody,
       );
     }
   }

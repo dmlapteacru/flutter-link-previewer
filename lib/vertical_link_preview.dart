@@ -10,6 +10,8 @@ class VerticalLinkPreview extends StatelessWidget {
     @required this.onTap,
     this.titleFontSize,
     this.bodyFontSize,
+    this.showTitle,
+    this.showBody,
   })  : assert(imageUri != null),
         assert(title != null),
         assert(url != null),
@@ -24,13 +26,19 @@ class VerticalLinkPreview extends StatelessWidget {
   final Function onTap;
   final double titleFontSize;
   final double bodyFontSize;
+  final bool showTitle;
+  final bool showBody;
 
-  double calculateTitleFontSize(double height) {
+  double computeTitleFontSize(double height) {
     double size = height * 0.13;
     if (size > 15) {
       size = 15;
     }
     return size;
+  }
+
+  int computeTitleLines(layoutHeight, layoutWidth) {
+    return layoutHeight - layoutWidth < 50 ? 1 : 2;
   }
 
   @override
@@ -40,10 +48,10 @@ class VerticalLinkPreview extends StatelessWidget {
       var layoutHeight = constraints.biggest.height;
 
       var _titleFontSize = titleFontSize == null
-          ? calculateTitleFontSize(layoutHeight)
+          ? computeTitleFontSize(layoutHeight)
           : titleFontSize;
       var _bodyFontSize = bodyFontSize == null
-          ? calculateTitleFontSize(layoutHeight) - 1
+          ? computeTitleFontSize(layoutHeight) - 1
           : bodyFontSize;
 
       return InkWell(
@@ -62,42 +70,53 @@ class VerticalLinkPreview extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(3.0, 1.0, 3.0, 0.0),
-                child: Container(
-                  alignment: Alignment(-1.0, -1.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: _titleFontSize),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: layoutHeight - layoutWidth < 50 ? 1 : 2,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 4.0),
-                  child: Container(
-                    alignment: Alignment(-1.0, -1.0),
-                    child: Text(
-                      description,
-                      style: TextStyle(
-                          fontSize: _bodyFontSize, color: Colors.grey),
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                ),
-              ),
+              showTitle == false
+                  ? Container()
+                  : _buildTitleContainer(_titleFontSize,
+                      computeTitleLines(layoutHeight, layoutWidth)),
+              showBody == false
+                  ? Container()
+                  : _buildBodyContainer(_bodyFontSize),
             ],
           ));
     });
+  }
+
+  Widget _buildTitleContainer(_titleFontSize, _maxLines) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(3.0, 1.0, 3.0, 0.0),
+      child: Container(
+        alignment: Alignment(-1.0, -1.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: _titleFontSize),
+              overflow: TextOverflow.ellipsis,
+              maxLines: _maxLines,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBodyContainer(_bodyFontSize) {
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 4.0),
+        child: Container(
+          alignment: Alignment(-1.0, -1.0),
+          child: Text(
+            description,
+            style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
+            overflow: TextOverflow.fade,
+          ),
+        ),
+      ),
+    );
   }
 }

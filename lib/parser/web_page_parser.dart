@@ -25,9 +25,7 @@ class WebPageParser {
           if (ogTagValue == null || ogTagValue.length == 0) {
             ogTagValue = _scrapeDataToEmptyValue(ogTagTitle, document);
           }
-          if (ogTagTitle == "image" &&
-              (!ogTagValue.startsWith("http") ||
-                  !ogTagValue.startsWith("https"))) {
+          if (ogTagTitle == "image" && !ogTagValue.startsWith("http")) {
             data[ogTagTitle] = "http://" + _extractHost(url) + ogTagValue;
           } else {
             data[ogTagTitle] = ogTagValue;

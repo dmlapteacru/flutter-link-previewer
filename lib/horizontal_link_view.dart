@@ -7,9 +7,11 @@ class HorizontalLinkView extends StatelessWidget {
     @required this.title,
     @required this.description,
     @required this.imageUri,
+    @required this.onTap,
     this.titleFontSize,
     this.bodyFontSize,
-    @required this.onTap,
+    this.showTitle,
+    this.showBody,
   })  : assert(imageUri != null),
         assert(title != null),
         assert(url != null),
@@ -24,13 +26,23 @@ class HorizontalLinkView extends StatelessWidget {
   final Function onTap;
   final double titleFontSize;
   final double bodyFontSize;
+  final bool showTitle;
+  final bool showBody;
 
-  double calculateTitleFontSize(double width) {
+  double computeTitleFontSize(double width) {
     double size = width * 0.13;
     if (size > 15) {
       size = 15;
     }
     return size;
+  }
+
+  int computeTitleLines(layoutHeight) {
+    return layoutHeight >= 100 ? 2 : 1;
+  }
+
+  int computeBodyLines(layoutHeight) {
+    return layoutHeight ~/ 25 == 0 ? 1 : layoutHeight ~/ 25;
   }
 
   @override
@@ -40,10 +52,10 @@ class HorizontalLinkView extends StatelessWidget {
       var layoutHeight = constraints.biggest.height;
 
       var _titleFontSize = titleFontSize == null
-          ? calculateTitleFontSize(layoutWidth)
+          ? computeTitleFontSize(layoutWidth)
           : titleFontSize;
       var _bodyFontSize = bodyFontSize == null
-          ? calculateTitleFontSize(layoutWidth) - 1
+          ? computeTitleFontSize(layoutWidth) - 1
           : bodyFontSize;
 
       return InkWell(
@@ -62,42 +74,18 @@ class HorizontalLinkView extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Column(
+                mainAxisAlignment: showBody == false
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4.0, 2.0, 3.0, 1.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment(-1.0, -1.0),
-                          child: Text(
-                            title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: _titleFontSize),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: layoutHeight >= 100 ? 2 : 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5.0, 3.0, 5.0, 0.0),
-                      child: Container(
-                        alignment: Alignment(-1.0, -1.0),
-                        child: Text(
-                          description,
-                          style: TextStyle(
-                              fontSize: _bodyFontSize, color: Colors.grey),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: layoutHeight ~/ 25,
-                        ),
-                      ),
-                    ),
-                  ),
+                  showTitle == false
+                      ? Container()
+                      : _buildTitleContainer(
+                          _titleFontSize, computeTitleLines(layoutHeight)),
+                  showBody == false
+                      ? Container()
+                      : _buildBodyContainer(
+                          _bodyFontSize, computeBodyLines(layoutHeight))
                 ],
               ),
             ),
@@ -105,5 +93,51 @@ class HorizontalLinkView extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _buildTitleContainer(_titleFontSize, _maxLines) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4.0, 2.0, 3.0, 1.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            alignment: Alignment(-1.0, -1.0),
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: _titleFontSize),
+              overflow: TextOverflow.ellipsis,
+              maxLines: _maxLines,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBodyContainer(_bodyFontSize, _maxLines) {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 0.0),
+        child: Column(
+          mainAxisAlignment: showTitle == false
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              alignment: Alignment(-1.0, -1.0),
+              child: Text(
+                description,
+                style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
+                overflow: TextOverflow.ellipsis,
+                maxLines: _maxLines,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
