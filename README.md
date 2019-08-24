@@ -75,3 +75,9 @@ Widget build() {
 | `defaultPlaceholderColor` | `Color` (default: `light-grey`) | If placeholder is not set, will be used the default one and its color can be set using this prop (empty container with background) |
 | `showTitle` | `bool` (default: `true`) | Title can be hiden using this prop, if it set to false |
 | `showBody` | `bool` (default: `true`) | Body can be hiden using this prop, if it set to false |
+
+#### From version 1.2.0
+| PropName  | Value | Definition |
+| --------- |:-----:| ----------:|
+| `bodyTextOverflow` | `TextOverflow` (default: `TextOverflow.ellipsis` or `TextOverflow.fade`) | Text overflow prop |
+| `bodyMaxLines` | `int` (default: `depends on hight`) | Max Lines that will be shown in the body |

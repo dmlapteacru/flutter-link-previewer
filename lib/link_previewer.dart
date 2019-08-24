@@ -6,7 +6,6 @@ import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' hide Text;
 import 'package:flutter/material.dart' hide Element;
 import 'dart:async';
-import 'dart:convert';
 
 part 'parser/web_page_parser.dart';
 
@@ -30,6 +29,8 @@ class LinkPreviewer extends StatefulWidget {
     this.showTitle = true,
     this.showBody = true,
     this.direction = ContentDirection.horizontal,
+    this.bodyTextOverflow,
+    this.bodyMaxLines,
   })  : assert(link != null),
         super(key: key);
 
@@ -44,6 +45,8 @@ class LinkPreviewer extends StatefulWidget {
   final Widget placeholder;
   final bool showTitle;
   final bool showBody;
+  final TextOverflow bodyTextOverflow;
+  final int bodyMaxLines;
 
   @override
   _LinkPreviewer createState() => _LinkPreviewer();
@@ -59,6 +62,9 @@ class _LinkPreviewer extends State<LinkPreviewer> {
   void initState() {
     super.initState();
     _link = widget.link.trim();
+    if (_link.startsWith("https")) {
+      _link = "http" + _link.split("https")[1];
+    }
     _placeholderColor = widget.defaultPlaceholderColor == null
         ? Color.fromRGBO(235, 235, 235, 1.0)
         : widget.defaultPlaceholderColor;
@@ -157,18 +163,18 @@ class _LinkPreviewer extends State<LinkPreviewer> {
       ),
       height: _height,
       child: _buildLinkView(
-        _link,
-        _metaData['title'] == null ? "" : _metaData['title'],
-        _metaData['description'] == null ? "" : _metaData['description'],
-        _metaData['image'] == null ? "" : _metaData['image'],
-        _launchURL,
-        widget.showTitle,
-        widget.showBody
-      ),
+          _link,
+          _metaData['title'] == null ? "" : _metaData['title'],
+          _metaData['description'] == null ? "" : _metaData['description'],
+          _metaData['image'] == null ? "" : _metaData['image'],
+          _launchURL,
+          widget.showTitle,
+          widget.showBody),
     );
   }
 
-  Widget _buildLinkView(link, title, description, imageUri, onTap, showTitle, showBody) {
+  Widget _buildLinkView(
+      link, title, description, imageUri, onTap, showTitle, showBody) {
     if (widget.direction == ContentDirection.horizontal) {
       return HorizontalLinkView(
         url: link,
@@ -178,6 +184,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         onTap: onTap,
         showTitle: showTitle,
         showBody: showBody,
+        bodyTextOverflow: widget.bodyTextOverflow,
+        bodyMaxLines: widget.bodyMaxLines,
       );
     } else {
       return VerticalLinkPreview(
@@ -188,6 +196,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         onTap: onTap,
         showTitle: showTitle,
         showBody: showBody,
+        bodyTextOverflow: widget.bodyTextOverflow,
+        bodyMaxLines: widget.bodyMaxLines,
       );
     }
   }

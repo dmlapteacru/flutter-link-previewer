@@ -10,4 +10,13 @@
 ### Resolved bug with images where http..(host) was always added to image uri
 ### Added new properties: 
 ### 1. showTitle - false or true (default) - allows to hide title
-### 1. showBody - false or true (default) - allows to hide body
+### 2. showBody - false or true (default) - allows to hide body
+
+## [1.2.0]
+### Handling https certificates failure (replacing https to http)
+### Adding 'www' to image uri, if not exists
+### Changed body maxLines multiplier for vertical direction (maxLines = layoutHeight / 20.5)
+### Changed body maxLines multiplier for horizontal direction (maxLines = layoutHeight / 60)
+### Added new property - bodyTextOverflow
+### Added new property - bodyMaxLines
+### Changed parsing way - not it parses the web page from string (was bytes - got parsing format errors from some web pages)

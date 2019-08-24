@@ -12,6 +12,8 @@ class VerticalLinkPreview extends StatelessWidget {
     this.bodyFontSize,
     this.showTitle,
     this.showBody,
+    this.bodyTextOverflow,
+    this.bodyMaxLines,
   })  : assert(imageUri != null),
         assert(title != null),
         assert(url != null),
@@ -28,6 +30,8 @@ class VerticalLinkPreview extends StatelessWidget {
   final double bodyFontSize;
   final bool showTitle;
   final bool showBody;
+  final TextOverflow bodyTextOverflow;
+  final int bodyMaxLines;
 
   double computeTitleFontSize(double height) {
     double size = height * 0.13;
@@ -39,6 +43,10 @@ class VerticalLinkPreview extends StatelessWidget {
 
   int computeTitleLines(layoutHeight, layoutWidth) {
     return layoutHeight - layoutWidth < 50 ? 1 : 2;
+  }
+
+  int computeBodyLines(layoutHeight) {
+    return layoutHeight ~/ 60 == 0 ? 1 : layoutHeight ~/ 60;
   }
 
   @override
@@ -60,7 +68,11 @@ class VerticalLinkPreview extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 flex: 2,
-                child: Container(
+                child: imageUri == ""
+                    ? Container(
+                  color: Color.fromRGBO(235, 235, 235, 1.0),
+                )
+                    : Container(
                   foregroundDecoration: BoxDecoration(
                     image: DecorationImage(
                         image: NetworkImage(imageUri),
@@ -73,10 +85,10 @@ class VerticalLinkPreview extends StatelessWidget {
               showTitle == false
                   ? Container()
                   : _buildTitleContainer(_titleFontSize,
-                      computeTitleLines(layoutHeight, layoutWidth)),
+                  computeTitleLines(layoutHeight, layoutWidth)),
               showBody == false
                   ? Container()
-                  : _buildBodyContainer(_bodyFontSize),
+                  : _buildBodyContainer(_bodyFontSize, computeBodyLines(layoutHeight)),
             ],
           ));
     });
@@ -103,7 +115,7 @@ class VerticalLinkPreview extends StatelessWidget {
     );
   }
 
-  Widget _buildBodyContainer(_bodyFontSize) {
+  Widget _buildBodyContainer(_bodyFontSize, _maxLines) {
     return Expanded(
       flex: 1,
       child: Padding(
@@ -113,7 +125,9 @@ class VerticalLinkPreview extends StatelessWidget {
           child: Text(
             description,
             style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
-            overflow: TextOverflow.fade,
+            overflow:
+            bodyTextOverflow == null ? TextOverflow.fade : bodyTextOverflow,
+            maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
           ),
         ),
       ),
