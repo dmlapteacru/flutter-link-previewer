@@ -12,6 +12,8 @@ class HorizontalLinkView extends StatelessWidget {
     this.bodyFontSize,
     this.showTitle,
     this.showBody,
+    this.bodyTextOverflow,
+    this.bodyMaxLines,
   })  : assert(imageUri != null),
         assert(title != null),
         assert(url != null),
@@ -28,6 +30,8 @@ class HorizontalLinkView extends StatelessWidget {
   final double bodyFontSize;
   final bool showTitle;
   final bool showBody;
+  final TextOverflow bodyTextOverflow;
+  final int bodyMaxLines;
 
   double computeTitleFontSize(double width) {
     double size = width * 0.13;
@@ -42,7 +46,7 @@ class HorizontalLinkView extends StatelessWidget {
   }
 
   int computeBodyLines(layoutHeight) {
-    return layoutHeight ~/ 25 == 0 ? 1 : layoutHeight ~/ 25;
+    return layoutHeight ~/ 20.5 == 0 ? 1 : layoutHeight ~/ 20.5;
   }
 
   @override
@@ -64,7 +68,11 @@ class HorizontalLinkView extends StatelessWidget {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Container(
+              child: imageUri == ""
+                  ? Container(
+                color: Color.fromRGBO(235, 235, 235, 1.0),
+              )
+                  : Container(
                 foregroundDecoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(imageUri), fit: BoxFit.cover),
@@ -81,11 +89,11 @@ class HorizontalLinkView extends StatelessWidget {
                   showTitle == false
                       ? Container()
                       : _buildTitleContainer(
-                          _titleFontSize, computeTitleLines(layoutHeight)),
+                      _titleFontSize, computeTitleLines(layoutHeight)),
                   showBody == false
                       ? Container()
                       : _buildBodyContainer(
-                          _bodyFontSize, computeBodyLines(layoutHeight))
+                      _bodyFontSize, computeBodyLines(layoutHeight))
                 ],
               ),
             ),
@@ -131,8 +139,10 @@ class HorizontalLinkView extends StatelessWidget {
               child: Text(
                 description,
                 style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
-                overflow: TextOverflow.ellipsis,
-                maxLines: _maxLines,
+                overflow: bodyTextOverflow == null
+                    ? TextOverflow.ellipsis
+                    : bodyTextOverflow,
+                maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
               ),
             ),
           ],
