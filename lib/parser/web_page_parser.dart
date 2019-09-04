@@ -1,7 +1,6 @@
 part of link_previewer;
 
 class WebPageParser {
-
   static Future<Map> getData(String url) async {
     var response = await http.get(url);
 
@@ -22,10 +21,7 @@ class WebPageParser {
         if ((ogTagValue != null && ogTagValue != "") ||
             requiredAttributes.contains(ogTagTitle)) {
           if (ogTagTitle == "image" && !ogTagValue.startsWith("http")) {
-            var host = _extractHost(url).startsWith("www") == false
-                ? "www." + _extractHost(url)
-                : _extractHost(url);
-            data[ogTagTitle] = "http://" + host + ogTagValue;
+            data[ogTagTitle] = "http://" + _extractHost(url) + ogTagValue;
           } else {
             data[ogTagTitle] = ogTagValue;
           }
@@ -71,7 +67,9 @@ class WebPageParser {
   static String _scrapeDescription(Document document) {
     var meta = document.getElementsByTagName("meta");
     var description = "";
-    var metaDescription = meta.firstWhere((e) => e.attributes["name"] == "description", orElse: () => null);
+    var metaDescription = meta.firstWhere(
+        (e) => e.attributes["name"] == "description",
+        orElse: () => null);
 
     if (metaDescription != null) {
       description = metaDescription.attributes["content"];
@@ -92,19 +90,31 @@ class WebPageParser {
       imageSrc = images[0].attributes["src"];
 
       if (!imageSrc.startsWith("http")) {
-        var host = _extractHost(url).startsWith("www") == false
-            ? "www." + _extractHost(url)
-            : _extractHost(url);
-        imageSrc ="http://" + host + imageSrc;
+        imageSrc = "http://" + _extractHost(url) + imageSrc;
       }
     }
     if (imageSrc == "") {
-      print("WARNING - WebPageParser - image might be empty. Tag <img> was not found.");
+      print("WARNING - WebPageParser - " + url);
+      print(
+          "WARNING - WebPageParser - image might be empty. Tag <img> was not found.");
     }
     return imageSrc;
   }
 
   static List<Element> _getOgPropertyData(Document document) {
     return document.head.querySelectorAll("[property*='og:']");
+  }
+
+  static String _addWWWPrefixIfNotExists(String uri) {
+    if (uri == null || uri == "") {
+      return uri;
+    }
+
+    Uri prefixUri;
+    Uri parsedUri = Uri.parse(uri);
+    if (!parsedUri.host.startsWith('www')) {
+      prefixUri = parsedUri.replace(host: 'www.' + parsedUri.host);
+    }
+    return prefixUri.toString();
   }
 }

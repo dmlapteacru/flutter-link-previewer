@@ -57,6 +57,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
   double _height;
   String _link;
   Color _placeholderColor;
+  bool _failedToLoadImage = false;
 
   @override
   void initState() {
@@ -87,9 +88,22 @@ class _LinkPreviewer extends State<LinkPreviewer> {
     }
   }
 
+  void _validateImageUri(uri) {
+    precacheImage(NetworkImage(uri), context, onError: (e, stackTrace) {
+      setState(() {
+        _failedToLoadImage = true;
+      });
+    });
+  }
+
+  String _getUriWithPrefix(uri) {
+    return WebPageParser._addWWWPrefixIfNotExists(uri);
+  }
+
   void _getMetaData(link) async {
     Map data = await WebPageParser.getData(link);
     if (data != null) {
+      _validateImageUri(data['image']);
       setState(() {
         _metaData = data;
       });
@@ -180,7 +194,9 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         url: link,
         title: title,
         description: description,
-        imageUri: imageUri,
+        imageUri: _failedToLoadImage == false
+            ? imageUri
+            : _getUriWithPrefix(imageUri),
         onTap: onTap,
         showTitle: showTitle,
         showBody: showBody,
@@ -192,7 +208,9 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         url: link,
         title: title,
         description: description,
-        imageUri: imageUri,
+        imageUri: _failedToLoadImage == false
+            ? imageUri
+            : _getUriWithPrefix(imageUri),
         onTap: onTap,
         showTitle: showTitle,
         showBody: showBody,

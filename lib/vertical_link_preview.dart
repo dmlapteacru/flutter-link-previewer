@@ -70,25 +70,26 @@ class VerticalLinkPreview extends StatelessWidget {
                 flex: 2,
                 child: imageUri == ""
                     ? Container(
-                  color: Color.fromRGBO(235, 235, 235, 1.0),
-                )
+                        color: Color.fromRGBO(235, 235, 235, 1.0),
+                      )
                     : Container(
-                  foregroundDecoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(imageUri),
-                        fit: layoutHeight >= layoutWidth
-                            ? BoxFit.cover
-                            : BoxFit.fitWidth),
-                  ),
-                ),
+                        foregroundDecoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(imageUri),
+                              fit: layoutHeight >= layoutWidth
+                                  ? BoxFit.cover
+                                  : BoxFit.fitWidth),
+                        ),
+                      ),
               ),
               showTitle == false
                   ? Container()
                   : _buildTitleContainer(_titleFontSize,
-                  computeTitleLines(layoutHeight, layoutWidth)),
+                      computeTitleLines(layoutHeight, layoutWidth)),
               showBody == false
                   ? Container()
-                  : _buildBodyContainer(_bodyFontSize, computeBodyLines(layoutHeight)),
+                  : _buildBodyContainer(
+                      _bodyFontSize, computeBodyLines(layoutHeight)),
             ],
           ));
     });
@@ -96,7 +97,7 @@ class VerticalLinkPreview extends StatelessWidget {
 
   Widget _buildTitleContainer(_titleFontSize, _maxLines) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(3.0, 1.0, 3.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(4.0, 1.0, 3.0, 0.0),
       child: Container(
         alignment: Alignment(-1.0, -1.0),
         child: Column(
@@ -126,7 +127,7 @@ class VerticalLinkPreview extends StatelessWidget {
             description,
             style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
             overflow:
-            bodyTextOverflow == null ? TextOverflow.fade : bodyTextOverflow,
+                bodyTextOverflow == null ? TextOverflow.fade : bodyTextOverflow,
             maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
           ),
         ),

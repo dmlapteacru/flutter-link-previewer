@@ -20,3 +20,7 @@
 ### Added new property - bodyTextOverflow
 ### Added new property - bodyMaxLines
 ### Changed parsing way - not it parses the web page from string (was bytes - got parsing format errors from some web pages)
+
+## [1.2.1]
+### Resolved bug with adding WWW to image uri. Now it will be added only if original uri will return exception
+### Removed multiplier for horizontal direction. Now if height less than 40 maxLines = 1, if it is greater then maxLines will increase by 1 for each 15 px
