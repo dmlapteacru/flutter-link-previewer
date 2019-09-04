@@ -46,7 +46,11 @@ class HorizontalLinkView extends StatelessWidget {
   }
 
   int computeBodyLines(layoutHeight) {
-    return layoutHeight ~/ 20.5 == 0 ? 1 : layoutHeight ~/ 20.5;
+    var lines = 1;
+    if (layoutHeight > 40) {
+      lines += (layoutHeight - 40.0) ~/ 15.0;
+    }
+    return lines;
   }
 
   @override
@@ -70,14 +74,14 @@ class HorizontalLinkView extends StatelessWidget {
               flex: 1,
               child: imageUri == ""
                   ? Container(
-                color: Color.fromRGBO(235, 235, 235, 1.0),
-              )
+                      color: Color.fromRGBO(235, 235, 235, 1.0),
+                    )
                   : Container(
-                foregroundDecoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(imageUri), fit: BoxFit.cover),
-                ),
-              ),
+                      foregroundDecoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(imageUri), fit: BoxFit.cover),
+                      ),
+                    ),
             ),
             Expanded(
               flex: 3,
@@ -89,11 +93,11 @@ class HorizontalLinkView extends StatelessWidget {
                   showTitle == false
                       ? Container()
                       : _buildTitleContainer(
-                      _titleFontSize, computeTitleLines(layoutHeight)),
+                          _titleFontSize, computeTitleLines(layoutHeight)),
                   showBody == false
                       ? Container()
                       : _buildBodyContainer(
-                      _bodyFontSize, computeBodyLines(layoutHeight))
+                          _bodyFontSize, computeBodyLines(layoutHeight))
                 ],
               ),
             ),
@@ -134,15 +138,18 @@ class HorizontalLinkView extends StatelessWidget {
               ? MainAxisAlignment.center
               : MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              alignment: Alignment(-1.0, -1.0),
-              child: Text(
-                description,
-                style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
-                overflow: bodyTextOverflow == null
-                    ? TextOverflow.ellipsis
-                    : bodyTextOverflow,
-                maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
+            Expanded(
+              child: Container(
+                alignment: Alignment(-1.0, -1.0),
+                child: Text(
+                  description,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
+                  overflow: bodyTextOverflow == null
+                      ? TextOverflow.ellipsis
+                      : bodyTextOverflow,
+                  maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
+                ),
               ),
             ),
           ],
