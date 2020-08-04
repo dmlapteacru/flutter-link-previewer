@@ -23,6 +23,8 @@ class LinkPreviewer extends StatefulWidget {
     this.bodyFontSize,
     this.backgroundColor = Colors.white,
     this.borderColor = Colors.deepOrangeAccent,
+    this.titleTextColor = Colors.black,
+    this.bodyTextColor = Colors.grey,
     this.defaultPlaceholderColor,
     this.borderRadius,
     this.placeholder,
@@ -40,6 +42,8 @@ class LinkPreviewer extends StatefulWidget {
   final Color backgroundColor;
   final Color borderColor;
   final Color defaultPlaceholderColor;
+  final Color titleTextColor;
+  final Color bodyTextColor;
   final double borderRadius;
   final ContentDirection direction;
   final Widget placeholder;
@@ -202,6 +206,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         showBody: showBody,
         bodyTextOverflow: widget.bodyTextOverflow,
         bodyMaxLines: widget.bodyMaxLines,
+        titleTextColor: widget.titleTextColor,
+        bodyTextColor: widget.bodyTextColor,
       );
     } else {
       return VerticalLinkPreview(
@@ -216,6 +222,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         showBody: showBody,
         bodyTextOverflow: widget.bodyTextOverflow,
         bodyMaxLines: widget.bodyMaxLines,
+        titleTextColor: widget.titleTextColor,
+        bodyTextColor: widget.bodyTextColor,
       );
     }
   }

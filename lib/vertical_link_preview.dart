@@ -14,6 +14,8 @@ class VerticalLinkPreview extends StatelessWidget {
     this.showBody,
     this.bodyTextOverflow,
     this.bodyMaxLines,
+    this.titleTextColor,
+    this.bodyTextColor,
   })  : assert(imageUri != null),
         assert(title != null),
         assert(url != null),
@@ -32,6 +34,8 @@ class VerticalLinkPreview extends StatelessWidget {
   final bool showBody;
   final TextOverflow bodyTextOverflow;
   final int bodyMaxLines;
+  final Color titleTextColor;
+  final Color bodyTextColor;
 
   double computeTitleFontSize(double height) {
     double size = height * 0.13;
@@ -106,7 +110,7 @@ class VerticalLinkPreview extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: _titleFontSize),
+                  fontWeight: FontWeight.bold, fontSize: _titleFontSize, color: titleTextColor),
               overflow: TextOverflow.ellipsis,
               maxLines: _maxLines,
             ),
@@ -125,7 +129,7 @@ class VerticalLinkPreview extends StatelessWidget {
           alignment: Alignment(-1.0, -1.0),
           child: Text(
             description,
-            style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
+            style: TextStyle(fontSize: _bodyFontSize, color: bodyTextColor),
             overflow:
                 bodyTextOverflow == null ? TextOverflow.fade : bodyTextOverflow,
             maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
