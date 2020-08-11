@@ -57,9 +57,9 @@ class WebPageParser {
   }
 
   static String _scrapeTitle(Document document) {
-    var tagTitle = document.head.getElementsByTagName("title")[0].text;
-    if (tagTitle != null) {
-      return tagTitle;
+    var titleTags = document.head.getElementsByTagName("title");
+    if (titleTags.isNotEmpty && titleTags.first != null) {
+      return titleTags.first.text;
     }
     return "";
   }
